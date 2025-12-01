@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: #6c63ff;
+            background: linear-gradient(45deg, #6c63ff, #ff6584);
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 20px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #6c63ff, #ff6584);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .user-info h3 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .user-info p {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .notification-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4757;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 50%;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .card:nth-child(1) .card-icon {
+            background: linear-gradient(45deg, #6c63ff, #36327a);
+        }
+
+        .card:nth-child(2) .card-icon {
+            background: linear-gradient(45deg, #ff6584, #b3475e);
+        }
+
+        .card:nth-child(3) .card-icon {
+            background: linear-gradient(45deg, #63ffc3, #27a37a);
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .card-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #fff, #a8a4ff);
+            -webkit-text-fill-color: transparent;
+        }
+
+        .trend {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+
+        .trend.up {
+            color: #4cd964;
+        }
+
+        .trend.down {
+            color: #ff4757;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-header h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .time-filter {
+            display: flex;
+            gap: 10px;
+        }
+
+        .time-btn {
+            padding: 6px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .time-btn.active {
+            background: #6c63ff;
+        }
+
+        .time-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .chart {
+            height: 300px;
+            position: relative;
+        }
+
+        .chart-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(108, 99, 255, 0.1), rgba(255, 101, 132, 0.1));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            opacity: 0.5;
+        }
+
+        .recent-activity {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .activity-list {
+            margin-top: 20px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .activity-icon.success {
+            background: rgba(76, 217, 100, 0.2);
+            color: #4cd964;
+        }
+
+        .activity-icon.warning {
+            background: rgba(255, 204, 0, 0.2);
+            color: #ffcc00;
+        }
+
+        .activity-icon.error {
+            background: rgba(255, 71, 87, 0.2);
+            color: #ff4757;
+        }
+
+        .activity-details h4 {
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+
+        .activity-details p {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .activity-time {
+            margin-left: auto;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .team-members {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .members-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .member {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .member:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .member-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #6c63ff, #ff6584);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .member-info h4 {
+            font-size: 0.9rem;
+        }
+
+        .member-info p {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .quick-actions {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 15px;
+            padding: 15px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .action-btn:hover {
+            background: #6c63ff;
+            transform: translateY(-3px);
+        }
+
+        .action-btn i {
+            font-size: 1.5rem;
+        }
+
+        .action-btn span {
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .user-profile {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-rocket"></i>
+                <h1>Cosmic Dashboard</h1>
+            </div>
+            <div class="user-profile">
+                <div class="avatar">JD</div>
+                <div class="user-info">
+                    <h3>John Doe</h3>
+                    <p>Administrator</p>
+                </div>
+                <button class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="trend up">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>12.5%</span>
+                    </div>
+                </div>
+                <h2>Total Revenue</h2>
+                <p>Monthly revenue performance</p>
+                <div class="card-value">$48,560</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="trend up">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>8.2%</span>
+                    </div>
+                </div>
+                <h2>Active Users</h2>
+                <p>Currently active on platform</p>
+                <div class="card-value">12,847</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="trend down">
+                        <i class="fas fa-arrow-down"></i>
+                        <span>3.1%</span>
+                    </div>
+                </div>
+                <h2>New Orders</h2>
+                <p>Orders placed today</p>
+                <div class="card-value">324</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h2>Performance Analytics</h2>
+                    <div class="time-filter">
+                        <button class="time-btn active">Day</button>
+                        <button class="time-btn">Week</button>
+                        <button class="time-btn">Month</button>
+                    </div>
+                </div>
+                <div class="chart">
+                    <div class="chart-placeholder">
+                        Interactive Chart Area
+                    </div>
+                </div>
+            </div>
+
+            <div class="recent-activity">
+                <h2>Recent Activity</h2>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-icon success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h4>Payment Received</h4>
+                            <p>From client #2847</p>
+                        </div>
+                        <div class="activity-time">2 min ago</div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h4>Server Alert</h4>
+                            <p>High CPU usage detected</p>
+                        </div>
+                        <div class="activity-time">15 min ago</div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon success">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h4>New User Registered</h4>
+                            <p>Welcome Sarah Johnson</p>
+                        </div>
+                        <div class="activity-time">1 hour ago</div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon error">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h4>Failed Login Attempt</h4>
+                            <p>From unknown IP address</p>
+                        </div>
+                        <div class="activity-time">2 hours ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-grid">
+            <div class="team-members">
+                <h2>Team Members</h2>
+                <div class="members-list">
+                    <div class="member">
+                        <div class="member-avatar">AJ</div>
+                        <div class="member-info">
+                            <h4>Alex Johnson</h4>
+                            <p>Lead Developer</p>
+                        </div>
+                    </div>
+                    <div class="member">
+                        <div class="member-avatar">MS</div>
+                        <div class="member-info">
+                            <h4>Maria Smith</h4>
+                            <p>UX Designer</p>
+                        </div>
+                    </div>
+                    <div class="member">
+                        <div class="member-avatar">RW</div>
+                        <div class="member-info">
+                            <h4>Robert Williams</h4>
+                            <p>Data Analyst</p>
+                        </div>
+                    </div>
+                    <div class="member">
+                        <div class="member-avatar">EC</div>
+                        <div class="member-info">
+                            <h4>Emma Chen</h4>
+                            <p>Marketing Lead</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <h2>Quick Actions</h2>
+                <div class="actions-grid">
+                    <button class="action-btn">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>New Project</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-file-export"></i>
+                        <span>Export Data</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Reports</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-bell"></i>
+                        <span>Notifications</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Help</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const timeButtons = document.querySelectorAll('.time-btn');
+            const cards = document.querySelectorAll('.card');
+            const actionButtons = document.querySelectorAll('.action-btn');
+            const notificationBtn = document.querySelector('.notification-btn');
+
+            timeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    timeButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const value = this.querySelector('.card-value').textContent;
+                    const title = this.querySelector('h2').textContent;
+                    alert(`${title}: ${value}`);
+                });
+            });
+
+            actionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const action = this.querySelector('span').textContent;
+                    alert(`Action: ${action} clicked!`);
+                });
+            });
+
+            notificationBtn.addEventListener('click', function() {
+                const badge = this.querySelector('.notification-badge');
+                badge.textContent = '0';
+                badge.style.background = '#2ed573';
+                
+                setTimeout(() => {
+                    alert('Notifications marked as read');
+                }, 300);
+            });
+
+            const members = document.querySelectorAll('.member');
+            members.forEach(member => {
+                member.addEventListener('click', function() {
+                    const name = this.querySelector('h4').textContent;
+                    const role = this.querySelector('p').textContent;
+                    alert(`Team Member: ${name}\nRole: ${role}`);
+                });
+            });
+
+            const chartPlaceholder = document.querySelector('.chart-placeholder');
+            chartPlaceholder.addEventListener('click', function() {
+                this.textContent = 'Chart Loading...';
+                this.style.opacity = '1';
+                
+                setTimeout(() => {
+                    this.textContent = 'Chart Data Loaded!';
+                    this.style.background = 'linear-gradient(45deg, rgba(76, 217, 100, 0.2), rgba(108, 99, 255, 0.2))';
+                }, 1000);
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('.time-btn.active')[0].click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

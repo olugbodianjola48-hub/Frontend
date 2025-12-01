@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Portfolio Components — interactive</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
+		<style>
+			:root{
+				--bg: #f0f7ff; --panel:#ffffff; --muted:#153243; --accent1:#0366d6; --accent2:#58a6ff; --glass:rgba(255,255,255,0.6);
+				--card-border: rgba(3,102,214,0.08);
+			}
+			[data-theme="dark"]{ --bg:#0f1724; --panel:#071224; --muted:#9aa4b2; --accent1:#7c3aed; --accent2:#06b6d4; --glass:rgba(255,255,255,0.04); --card-border: rgba(255,255,255,0.03); }
+
+			*{box-sizing:border-box}
+			html,body{height:100%;margin:0;font-family:'Poppins','Montserrat',system-ui,sans-serif;background:var(--bg);color:var(--muted);-webkit-font-smoothing:antialiased}
+			.bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+			.container{position:relative;z-index:2;max-width:1100px;margin:40px auto;padding:28px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.6),rgba(255,255,255,0.5));backdrop-filter:blur(6px);box-shadow:0 10px 30px rgba(2,6,23,0.08)}
+			[data-theme="dark"] .container{background:linear-gradient(180deg,rgba(7,18,36,0.45),rgba(7,18,36,0.35))}
+
+			header{display:flex;align-items:center;justify-content:space-between;gap:20px}
+			.brand{display:flex;gap:14px;align-items:center}
+			.logo{width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;background:linear-gradient(120deg,var(--accent1),var(--accent2));box-shadow:0 8px 26px rgba(3,60,120,0.12);cursor:pointer;transition:transform .25s}
+			.logo:hover{transform:translateY(-3px) scale(1.03)}
+			.brand h1{font-size:1.05rem;color:inherit;margin:0}
+			.brand p{margin:0;font-size:.85rem;color:var(--muted)}
+
+			nav{display:flex;align-items:center;gap:10px}
+			.btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;background:var(--panel);color:var(--muted);border:1px solid var(--card-border);cursor:pointer;font-weight:600}
+			.btn.icon{padding:8px;border-radius:10px;width:42px;height:42px;justify-content:center}
+			.btn.github{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;border:none;box-shadow:0 8px 20px rgba(6,45,90,0.12)}
+			.btn.github:hover{transform:translateY(-3px)}
+
+			.controls{display:flex;gap:8px;align-items:center}
+
+			.filters{display:flex;gap:8px;margin-top:18px}
+			.filters .chip{padding:6px 10px;border-radius:999px;background:transparent;border:1px dashed var(--card-border);color:var(--muted);cursor:pointer}
+
+			.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:20px}
+			.card{position:relative;padding:18px;border-radius:12px;background:linear-gradient(180deg,var(--panel),rgba(255,255,255,0.02));border:1px solid var(--card-border);color:var(--muted);overflow:hidden;transition:transform .35s,box-shadow .35s}
+			.card:hover{transform:translateY(-8px);box-shadow:0 18px 40px rgba(0,0,0,0.08)}
+			.card h3{color:inherit;margin-bottom:8px}
+			.card p{font-size:.95rem;color:var(--muted)}
+			.card .meta{display:flex;gap:8px;margin-top:12px}
+
+			.accent{color:var(--accent1);font-weight:600}
+
+			.reveal{opacity:0;transform:translateY(14px) scale(.98);transition:opacity .6s ease,transform .6s ease}
+			.reveal.visible{opacity:1;transform:none}
+
+			.logo-anim{background-size:200% 200%;animation:logoShift 6s linear infinite}
+			@keyframes logoShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+			.extreme .card{transform:rotateX(8deg) translateY(-6px) scale(1.02)}
+
+			footer{margin-top:20px;text-align:center;color:var(--muted);font-size:.9rem}
+
+			@media (max-width:640px){.container{margin:18px;padding:18px}.brand h1{font-size:1rem}}
+		</style>
+	</head>
+	<body>
+		<canvas id="bg" class="bg-canvas"></canvas>
+		<div class="container">
+			<header>
+				<div class="brand">
+					<div id="logo" class="logo logo-anim" title="Click for a burst">PC</div>
+					<div>
+						<h1>Portfolio Components <span class="accent">Live</span></h1>
+						<p>Small UI pieces with playful interactions</p>
+					</div>
+				</div>
+
+				<div class="controls">
+						<a id="githubBtn" class="btn github" href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer" title="View GitHub portfolio"><i class="fa-brands fa-github"></i>&nbsp;GitHub</a>
+						<button id="themeBtn" class="btn icon" aria-label="Toggle theme"><i id="themeIcon" class="fa-regular fa-sun"></i></button>
+						<button id="extremeBtn" class="btn">Extreme mode</button>
+					</div>
+			</header>
+
+			<div class="filters" role="toolbar" aria-label="Filters">
+				<button class="chip" data-filter="all">All</button>
+				<button class="chip" data-filter="ui">UI</button>
+				<button class="chip" data-filter="ux">UX</button>
+				<button class="chip" data-filter="data">Data</button>
+			</div>
+
+			<main class="grid" role="main">
+				<article class="card reveal" data-category="ui">
+					<h3>Card Component</h3>
+					<p>Responsive card with hover lift, skeleton and actions.</p>
+					<div class="meta"><span class="chip">HTML</span><span class="chip">CSS</span></div>
+				</article>
+
+				<article class="card reveal" data-category="ux">
+					<h3>Profile</h3>
+					<p>Avatar with progressive loading and accessible headings.</p>
+					<div class="meta"><span class="chip">Images</span><span class="chip">ARIA</span></div>
+				</article>
+
+				<article class="card reveal" data-category="data">
+					<h3>Stats</h3>
+					<p>Small statistical widgets with animated counters.</p>
+					<div class="meta"><span class="chip">JS</span><span class="chip">SVG</span></div>
+				</article>
+
+				<article class="card reveal" data-category="ui">
+					<h3>Modal</h3>
+					<p>Accessible modal with focus trap and smooth transitions.</p>
+					<div class="meta"><span class="chip">JS</span><span class="chip">A11y</span></div>
+				</article>
+			</main>
+
+			<footer>
+				<div>Built with <i class="fa-solid fa-heart" style="color:var(--accent1)"></i> — <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer" style="color:var(--accent1);text-decoration:none;font-weight:600">View my GitHub</a></div>
+			</footer>
+		</div>
+
+		<script>
+			(function(){
+				const html = document.documentElement;
+				const themeBtn = document.getElementById('themeBtn');
+				const themeIcon = document.getElementById('themeIcon');
+				const stored = localStorage.getItem('theme');
+				if(stored) html.setAttribute('data-theme', stored);
+				function updateIcon(){
+					const t = html.getAttribute('data-theme');
+					themeIcon.className = t === 'dark' ? 'fa-solid fa-moon' : 'fa-regular fa-sun';
+				}
+				updateIcon();
+				themeBtn.addEventListener('click', ()=>{
+					const cur = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+					html.setAttribute('data-theme', cur);
+					localStorage.setItem('theme', cur);
+					updateIcon();
+				});
+			})();
+
+			(function(){
+				const obs = new IntersectionObserver((entries)=>{
+					entries.forEach(e=>{
+						if(e.isIntersecting) e.target.classList.add('visible');
+					});
+				},{threshold:0.12});
+				document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+			})();
+			(function(){
+				const canvas = document.getElementById('bg');
+				const ctx = canvas.getContext('2d');
+				let w=canvas.width=innerWidth, h=canvas.height=innerHeight, particles=[];
+				const rand = (a,b)=>Math.random()*(b-a)+a;
+
+				function Particle(x,y,dx,dy,r,color){this.x=x;this.y=y;this.dx=dx;this.dy=dy;this.r=r;this.color=color}
+				Particle.prototype.update=function(){this.x+=this.dx;this.y+=this.dy;this.dx*=0.998;this.dy*=0.998;this.r*=0.999; if(this.r<0.2)this.r=0};
+				Particle.prototype.draw=function(){ctx.beginPath();ctx.fillStyle=this.color;ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fill()};
+
+				function spawn(n,center){for(let i=0;i<n;i++){const angle=Math.random()*Math.PI*2;const speed=rand(0.6,4);const p=new Particle(center.x+(Math.random()-0.5)*20,center.y+(Math.random()-0.5)*20,Math.cos(angle)*speed,Math.sin(angle)*speed,rand(1,4),`hsl(${Math.floor(rand(160,300))}deg ${Math.floor(rand(60,90))}% ${Math.floor(rand(40,60))}%)`);particles.push(p)}}
+
+				function loop(){ctx.clearRect(0,0,w,h);for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.update();p.draw(); if(p.r<=0.2||p.x<-50||p.y<-50||p.x>w+50||p.y>h+50)particles.splice(i,1)}requestAnimationFrame(loop)}
+
+				let extreme=false; const extremeBtn=document.getElementById('extremeBtn');
+				extremeBtn.addEventListener('click', ()=>{extreme=!extreme;document.documentElement.classList.toggle('extreme', extreme);extremeBtn.textContent = extreme? 'Extreme ✓':'Extreme mode'; if(extreme) spawn(60,{x:innerWidth/2,y:innerHeight/2});});
+
+				document.getElementById('logo').addEventListener('click', (ev)=>{const rect=ev.target.getBoundingClientRect();spawn(80,{x:rect.left+rect.width/2,y:rect.top+rect.height/2})});
+
+				setInterval(()=>{const count = extreme?7:2; for(let i=0;i<count;i++){particles.push(new Particle(rand(0,w),rand(0,h),rand(-0.3,0.3),rand(-0.3,0.3),rand(0.6,2),`hsla(${Math.floor(rand(180,320))},60%,60%,${rand(0.06,0.15)})`))}}, 300);
+
+				addEventListener('resize', ()=>{w=canvas.width=innerWidth;h=canvas.height=innerHeight});
+				loop();
+			})();
+
+			(function(){
+				const chips = document.querySelectorAll('.filters .chip');
+				chips.forEach(c=>c.addEventListener('click', ()=>{
+					chips.forEach(x=>x.classList.remove('active'));
+					c.classList.add('active');
+					const f = c.dataset.filter;
+					document.querySelectorAll('.grid .card').forEach(card=>{
+						card.style.display = (f === 'all' || card.dataset.category === f) ? '' : 'none';
+					});
+				}));
+			})();
+		</script>
+	</body>
+</html>
