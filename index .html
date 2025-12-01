@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Mode Toggle</title>
+    <style>
+        :root {
+            --bg: #f0f0f0;
+            --text: #333;
+            --card: #fff;
+            --shadow: rgba(0,0,0,0.1);
+        }
+        .dark {
+            --bg: #121212;
+            --text: #eee;
+            --card: #1e1e1e;
+            --shadow: rgba(0,0,0,0.4);
+        }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            transition: background 0.3s, color 0.3s;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: var(--card);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px var(--shadow);
+        }
+        h1 { margin: 0 0 20px; }
+        p { margin-bottom: 40px; opacity: 0.8; }
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 70px;
+            height: 34px;
+        }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background: #2196F3; }
+        input:checked + .slider:before { transform: translateX(36px); }
+        .sun { display: block; }
+        .moon { display: none; }
+        .dark .sun { display: none; }
+        .dark .moon { display: block; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hello World!</h1>
+        <p>Click the toggle to switch between light and dark mode</p>
+
+        <label class="toggle">
+            <input type="checkbox" id="darkModeToggle">
+            <span class="slider">
+                <span class="sun">Sun</span>
+                <span class="moon">Moon</span>
+            </span>
+        </label>
+    </div>
+
+    <script>
+        const toggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+
+        toggle.addEventListener('change', () => {
+            body.classList.toggle('dark');
+            localStorage.setItem('darkMode', body.classList.contains('dark'));
+        });
+
+        if (localStorage.getItem('darkMode') === 'true') {
+            body.classList.add('dark');
+            toggle.checked = true;
+        }
+    </script>
+</body>
+</html>
